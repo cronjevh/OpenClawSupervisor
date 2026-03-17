@@ -60,3 +60,14 @@ Run in a login shell if commands are missing from PATH.
   - server name: `ha-filesystem`
   - SSH host alias: `homeassistant`
   - allowed paths: `/homeassistant`, `/addon_configs/c2ac3963_openclaw_assistant/.openclaw`
+
+## Supervisor Improvement Path
+
+- Interactive supervisor-side escalation runbook: `/home/cronjev/.openclaw/workspace-supervisor/SUPERVISOR_IMPROVEMENT.md`
+- Use the same GitHub issue workflow as `workspace/SELF_IMPROVEMENT.md`, but for interactive admin-led troubleshooting in Telegram
+- Issue queue script: `/home/cronjev/.openclaw/workspace/AlexaHA/scripts/submit-improvement-issue.sh --stdin-json`
+- Repo defaults:
+  - owner: `cronjevh`
+  - repo: `home-improvement`
+- Environment/token resolution for GitHub is provided by: `/home/cronjev/.openclaw/workspace/bin/openclaw_env.sh`
+- Keep supervisor as field medic by default; use this path when a case is complex enough to require durable issue tracking or guided escalation

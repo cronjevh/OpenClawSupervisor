@@ -47,3 +47,4 @@ Normal day-to-day conversation remains on WhatsApp with the `main` agent.
 - On this environment, Home Assistant is reachable live at `http://192.168.0.117:8123` using `HOMEASSISTANT_TOKEN`.
 - The official Home Assistant MCP integration is reachable at `http://192.168.0.117:8123/api/mcp`; it is POST-only, requires `Accept: application/json`, and successfully answered MCP `initialize` and `tools/list` during supervisor validation.
 - Do not confuse the official HA MCP integration (`/api/mcp`) with the separate custom `ha-filesystem` MCP server defined under `home-improvement/.vscode/mcp.json` for SSH-backed file edits on `/homeassistant` and add-on OpenClaw paths.
+- Supervisor now has a documented interactive escalation workflow in `SUPERVISOR_IMPROVEMENT.md` that mirrors the GitHub-issue queueing pattern from `workspace/SELF_IMPROVEMENT.md`, but is meant for admin-led complex troubleshooting rather than unattended first-aid runs.
