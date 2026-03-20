@@ -40,6 +40,7 @@ None.
 | 2026-03-20 | Risk register and heartbeat runbook created | Initialised — no prior baseline |
 | 2026-03-20 | Added failed-login POC heartbeat check | Defined lightweight read-only monitor against `/config/home-assistant.log` |
 | 2026-03-20 | Drafted repeatable failed-login check script | Added concrete script and implementation note for heartbeat execution |
+| 2026-03-20 | Added NeMo / NemoClaw research backlog item | Captured future investigation into guardrail applicability for OpenClaw safety |
 
 ---
 

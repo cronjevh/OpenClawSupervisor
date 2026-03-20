@@ -35,6 +35,7 @@ A supervisor agent that:
 - Workspace and host file-access boundary awareness
 - Prompt injection awareness for external input channels (WhatsApp triage, future webhooks)
 - Secrets hygiene (hardcoded tokens, credentials in workspace files)
+- NeMo / NeMoClaw guardrail research — evaluate whether NVIDIA NeMo Guardrails / NemoClaw can add practical safety controls without breaking OpenClaw workflows
 
 ## Guiding Principle
 
@@ -63,6 +64,7 @@ Security posture should match actual risk. One hard guardrail on the single crit
 5. **External Input Injection Awareness** — document which external channels (WhatsApp groups, webhooks, future integrations) reach agent prompts; draft lightweight screening heuristics; design as advisory flags, not hard blocks
 6. **Secrets Hygiene Sweep** — scan workspace files for plaintext credentials; flag findings in the risk register with recommended remediation (env files, vault, or explicit accepted-risk notation)
 7. **Security Review Cadence** — design a recurring security review routine for the supervisor: risk register review, token rotation reminders, access drift detection, and a periodic best-practice research brief tailored to the actual threat model
+8. **NeMo / NemoClaw Applicability Review** — investigate `https://github.com/NVIDIA/NemoClaw` and adjacent NVIDIA guardrail tooling; determine whether any part of it can be used as a lightweight safety layer for OpenClaw without adding brittle complexity or degrading normal assistant behavior
 
 ## Dependencies
 
@@ -75,6 +77,7 @@ Security posture should match actual risk. One hard guardrail on the single crit
 - Should the risk register live as a workspace file (e.g. `RISK_REGISTER.md`) or as a structured data file?
 - Should security findings share the Telegram operational channel or use a lower-priority digest format?
 - Once the alarm guardrail is confirmed, which risk register item is the next meaningful one to address?
+- Does `NVIDIA/NemoClaw` provide a realistic, low-friction safety benefit for this installation, or would it add more integration and maintenance risk than practical protection?
 
 ## Next Moves
 
