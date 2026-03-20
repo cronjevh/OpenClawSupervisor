@@ -59,7 +59,11 @@ Run in a login shell if commands are missing from PATH.
   - config file: `/mnt/c/git/home-improvement/.vscode/mcp.json`
   - server name: `ha-filesystem`
   - SSH host alias: `homeassistant`
-  - allowed paths: `/homeassistant`, `/addon_configs/c2ac3963_openclaw_assistant/.openclaw`
+  - allowed paths: `/homeassistant`
+  - WSL prerequisite: `/home/cronjev/.ssh/config`, `id_ed25519`, and `known_hosts` must exist with Linux-safe permissions so `ssh -o BatchMode=yes homeassistant ...` works non-interactively
+  - Verified from WSL on `2026-03-20`:
+    - `ssh -o BatchMode=yes -o ConnectTimeout=8 homeassistant 'pwd'` -> `/root`
+    - `cd /mnt/c/git/home-improvement/scripts && timeout 40s node test-mcp-filesystem-servers.mjs` -> `2 pass, 0 fail`
 
 ## Supervisor Improvement Path
 
