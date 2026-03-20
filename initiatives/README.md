@@ -13,6 +13,7 @@ The aim is to keep a compact local control plane in the supervisor workspace:
 2. [Monica Cognitive Engagement](./monica-cognitive-engagement.md)
 3. [Home Assistant Maintenance and Improvement Flow](./home-assistant-maintenance-and-improvement-flow.md)
 4. [Home Ownership Maintenance Schedules and Reminders](./home-ownership-maintenance-schedules-and-reminders.md)
+5. [OpenClaw + Home Assistant Security Hardening and Proactive Monitoring](./security-hardening-and-proactive-monitoring.md)
 
 ## Control Files
 
