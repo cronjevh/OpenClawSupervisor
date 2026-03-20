@@ -26,15 +26,21 @@ This is the first concrete heartbeat monitor to implement.
 
 **Source:** `/config/home-assistant.log` (via HA filesystem MCP path)
 
+**Implementation reference:** `FAILED_LOGIN_POC.md`
+
 **Suggested search strings (start simple):**
 - `Login attempt or request with invalid authentication`
 - `Invalid authentication`
 - `Failed login`
 - `401`
 
+**Inspection window:** last 5000 lines by default
+
 **POC threshold:**
 - `INCIDENT` if 5 or more matching failed-auth lines are found in the recent inspection window
 - otherwise `CLEAN`
+
+**Repeatable check script:** `scripts/security-ha-failed-login-check.sh`
 
 **Record in STATUS.md:**
 - whether the failed-auth check was run
