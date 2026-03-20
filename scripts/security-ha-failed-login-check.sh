@@ -1,24 +1,54 @@
 #!/usr/bin/env bash
+# security-ha-failed-login-check.sh [log_file]
+#
+# Checks for repeated failed Home Assistant login attempts.
+#
+# Two modes:
+#   File mode:  pass a daily log file as $1 (full coverage — preferred)
+#               scripts/security-ha-failed-login-check.sh logs/ha/ha-2026-03-19.log
+#
+#   Live mode:  no argument — runs via SSH against live HA container logs (last 2000 lines)
+#               ssh homeassistant "bash -s" < scripts/security-ha-failed-login-check.sh
+#
+# See initiatives/security/FAILED_LOGIN_CHECK.md for details.
+
 set -euo pipefail
 
-LOG_PATH="${1:-/homeassistant/home-assistant.log}"
 MATCH_THRESHOLD="${MATCH_THRESHOLD:-5}"
-TAIL_LINES="${TAIL_LINES:-5000}"
-
 PATTERN='Login attempt or request with invalid authentication|Invalid authentication|Failed login'
 
-if [[ ! -f "$LOG_PATH" ]]; then
-  echo "STATUS=ERROR"
-  echo "DETAIL=log file not found: $LOG_PATH"
-  exit 0
+LOG_FILE="${1:-}"
+
+if [[ -n "$LOG_FILE" ]]; then
+  # File mode — run locally against the pulled daily log
+  if [[ ! -f "$LOG_FILE" ]]; then
+    echo "STATUS=ERROR"
+    echo "DETAIL=log file not found: $LOG_FILE"
+    exit 0
+  fi
+  log_content=$(cat "$LOG_FILE")
+  source_label="file:$LOG_FILE"
+else
+  # Live mode — runs on the HA host via: ssh homeassistant "bash -s" < this_script
+  TAIL_LINES="${TAIL_LINES:-2000}"
+  log_content=$(ha core logs -n "$TAIL_LINES" 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' || true)
+  source_label="live:ha-core-logs-n${TAIL_LINES}"
+
+  if [[ -z "$log_content" ]]; then
+    echo "STATUS=ERROR"
+    echo "DETAIL=ha core logs returned no output"
+    exit 0
+  fi
 fi
 
-matches=$(tail -n "$TAIL_LINES" "$LOG_PATH" 2>/dev/null | grep -E "$PATTERN" || true)
+matches=$(printf '%s\n' "$log_content" | grep -E "$PATTERN" || true)
 match_count=$(printf '%s\n' "$matches" | sed '/^$/d' | wc -l | tr -d ' ')
 
+# Extract IPs (IPv4 and IPv6) from 'from <ip> (' pattern
 ips=$(
   printf '%s\n' "$matches" \
-    | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' \
+    | grep -Eo 'from [^ ]+' \
+    | awk '{print $2}' \
     | sort \
     | uniq -c \
     | sort -nr \
@@ -39,9 +69,9 @@ else
 fi
 
 echo "STATUS=$status"
+echo "SOURCE=$source_label"
 echo "MATCH_COUNT=$match_count"
 echo "MATCH_THRESHOLD=$MATCH_THRESHOLD"
-echo "TAIL_LINES=$TAIL_LINES"
 echo "REPEATED_IP=${repeat_ip}"
 echo "REPEATED_IP_COUNT=${repeat_ip_count}"
 

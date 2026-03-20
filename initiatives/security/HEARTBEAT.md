@@ -10,45 +10,42 @@
 
 Run each check below. For any DETECTED signal, immediately skip to the Notification Protocol — do not continue to Phase 2.
 
-### POC Implementation Rule
+### Implementation Notes
 
-Until richer HA-side telemetry is available, the first working heartbeat check should stay lightweight:
-- use a read-only grep/search against `/homeassistant/home-assistant.log` via the `ha-filesystem` MCP server
-- prefer simple string-pattern heuristics over complex parsing
-- inspect a recent log slice where possible instead of the entire file
-- treat this as a proof-of-concept signal, not a definitive intrusion detector
+- HA 2024.5+ removed `/api/error_log`; logs live in the HA container and are read via `ha core logs`
+- ANSI colour codes must be stripped before pattern matching (`sed 's/\x1b\[[0-9;]*m//g'`)
+- Prefer simple string-pattern heuristics — these are validated against real HA log output
 
-### POC Check — Failed Login / Auth Anomaly
+### Check — Failed Login / Auth Anomaly
 
-This is the first concrete heartbeat monitor to implement.
+**Goal:** detect repeated failed Home Assistant login or authentication attempts.
 
-**Goal:** detect obvious repeated failed Home Assistant login or authentication attempts.
+**Source:** `ha core logs -n 2000` via `ssh homeassistant "bash -s"`
 
-**Source:** `/homeassistant/home-assistant.log` via `ha-filesystem` MCP server
+**Implementation reference:** `FAILED_LOGIN_CHECK.md`
 
-**Implementation reference:** `FAILED_LOGIN_POC.md`
-
-**Suggested search strings (start simple):**
-- `Login attempt or request with invalid authentication`
+**Search patterns (validated against HA 2026.2.3):**
+- `Login attempt or request with invalid authentication` ← primary, confirmed in live logs
 - `Invalid authentication`
 - `Failed login`
 
-**Inspection window:** last 5000 lines by default
+**Threshold:** `INCIDENT` if 5 or more matching lines in the inspection window; otherwise `CLEAN`
 
-**POC threshold:**
-- `INCIDENT` if 5 or more matching failed-auth lines are found in the recent inspection window
-- otherwise `CLEAN`
+**Script:** `scripts/security-ha-failed-login-check.sh` — two modes:
 
-**Repeatable check script:** `scripts/security-ha-failed-login-check.sh`
+- **File mode (preferred):** pass yesterday's daily log file as argument — full day coverage
+  `scripts/security-ha-failed-login-check.sh logs/ha/ha-$(date -d yesterday +%Y-%m-%d).log`
+- **Live mode (fallback):** pipe via SSH if no daily log file exists yet
+  `ssh homeassistant "bash -s" < scripts/security-ha-failed-login-check.sh`
 
-**Record in STATUS.md:**
-- whether the failed-auth check was run
-- the match count
-- whether any repeated source IP was visible in the matching lines
+Daily log files are pulled by `scripts/ha-pull-daily-logs.sh` (cron: `3 1 * * *`).
+Stored at: `workspace-supervisor/logs/ha/ha-YYYY-MM-DD.log` — retained 7 days.
+
+**Record in STATUS.md:** mode used, match count, any repeated source IP, run timestamp
 
 | Check | How to Verify | Signal = Compromise Suspected |
 |-------|---------------|-------------------------------|
-| **Failed HA login / auth anomaly (POC)** | Read `/homeassistant/home-assistant.log` via `ha-filesystem` MCP; search for failed-auth patterns in last 5000 lines | 5 or more matching failed-auth lines in the recent inspection window |
+| **Failed HA login / auth anomaly** | File mode against daily log if available; live SSH fallback otherwise | 5 or more matching failed-auth lines (`STATUS=INCIDENT`) |
 | **Alarm state anomaly** | Query `alarm_control_panel.*` state via HA REST; check logbook for state changes in the last 24h | State changed to `disarmed` or `disabled` without a corresponding user action in the logbook |
 | **Alarm domain access by agent** | Scan HA logbook for any API calls to `alarm_control_panel.*` entities from the OpenClaw token | Any entry — agents must never touch this domain |
 | **HA token unexpected activity** | Check HA logbook for API activity during periods when no agent session was active | Activity attributed to the OpenClaw token when no session was running |

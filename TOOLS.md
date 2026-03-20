@@ -65,6 +65,16 @@ Run in a login shell if commands are missing from PATH.
     - `ssh -o BatchMode=yes -o ConnectTimeout=8 homeassistant 'pwd'` -> `/root`
     - `cd /mnt/c/git/home-improvement/scripts && timeout 40s node test-mcp-filesystem-servers.mjs` -> `2 pass, 0 fail`
 
+## Daily HA Log Files
+
+- Location: `workspace-supervisor/logs/ha/ha-YYYY-MM-DD.log`
+- Content: full calendar day of Home Assistant container logs, ANSI-stripped
+- Pull script: `workspace-supervisor/scripts/ha-pull-daily-logs.sh [YYYY-MM-DD]`
+- Cron: `3 1 * * *` (01:03 SAST daily, pulls previous day)
+- Retention: 7 days (older files auto-cleaned by the pull script)
+- Pull log: `workspace-supervisor/logs/ha/pull.log`
+- Use for: security checks, error pattern analysis, improvement initiative research
+
 ## Supervisor Improvement Path
 
 - Interactive supervisor-side escalation runbook: `/home/cronjev/.openclaw/workspace-supervisor/SUPERVISOR_IMPROVEMENT.md`
