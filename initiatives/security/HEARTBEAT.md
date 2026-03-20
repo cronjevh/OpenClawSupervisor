@@ -13,7 +13,7 @@ Run each check below. For any DETECTED signal, immediately skip to the Notificat
 ### POC Implementation Rule
 
 Until richer HA-side telemetry is available, the first working heartbeat check should stay lightweight:
-- use a read-only grep/search against `/config/home-assistant.log` via the HA filesystem path
+- use a read-only grep/search against `/homeassistant/home-assistant.log` via the `ha-filesystem` MCP server
 - prefer simple string-pattern heuristics over complex parsing
 - inspect a recent log slice where possible instead of the entire file
 - treat this as a proof-of-concept signal, not a definitive intrusion detector
@@ -24,7 +24,7 @@ This is the first concrete heartbeat monitor to implement.
 
 **Goal:** detect obvious repeated failed Home Assistant login or authentication attempts.
 
-**Source:** `/config/home-assistant.log` (via HA filesystem MCP path)
+**Source:** `/homeassistant/home-assistant.log` via `ha-filesystem` MCP server
 
 **Implementation reference:** `FAILED_LOGIN_POC.md`
 
@@ -32,7 +32,6 @@ This is the first concrete heartbeat monitor to implement.
 - `Login attempt or request with invalid authentication`
 - `Invalid authentication`
 - `Failed login`
-- `401`
 
 **Inspection window:** last 5000 lines by default
 
@@ -49,7 +48,7 @@ This is the first concrete heartbeat monitor to implement.
 
 | Check | How to Verify | Signal = Compromise Suspected |
 |-------|---------------|-------------------------------|
-| **Failed HA login / auth anomaly (POC)** | Grep/search `/config/home-assistant.log` for simple failed-auth patterns in a recent window | 5 or more matching failed-auth lines in the recent inspection window |
+| **Failed HA login / auth anomaly (POC)** | Read `/homeassistant/home-assistant.log` via `ha-filesystem` MCP; search for failed-auth patterns in last 5000 lines | 5 or more matching failed-auth lines in the recent inspection window |
 | **Alarm state anomaly** | Query `alarm_control_panel.*` state via HA REST; check logbook for state changes in the last 24h | State changed to `disarmed` or `disabled` without a corresponding user action in the logbook |
 | **Alarm domain access by agent** | Scan HA logbook for any API calls to `alarm_control_panel.*` entities from the OpenClaw token | Any entry — agents must never touch this domain |
 | **HA token unexpected activity** | Check HA logbook for API activity during periods when no agent session was active | Activity attributed to the OpenClaw token when no session was running |

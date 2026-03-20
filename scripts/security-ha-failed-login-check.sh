@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LOG_PATH="${1:-/config/home-assistant.log}"
+LOG_PATH="${1:-/homeassistant/home-assistant.log}"
 MATCH_THRESHOLD="${MATCH_THRESHOLD:-5}"
 TAIL_LINES="${TAIL_LINES:-5000}"
 
-PATTERN='Login attempt or request with invalid authentication|Invalid authentication|Failed login|401'
+PATTERN='Login attempt or request with invalid authentication|Invalid authentication|Failed login'
 
 if [[ ! -f "$LOG_PATH" ]]; then
   echo "STATUS=ERROR"
