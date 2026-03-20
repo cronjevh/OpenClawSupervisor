@@ -14,6 +14,11 @@ The aim is to keep a compact local control plane in the supervisor workspace:
 3. [Home Assistant Maintenance and Improvement Flow](./home-assistant-maintenance-and-improvement-flow.md)
 4. [Home Ownership Maintenance Schedules and Reminders](./home-ownership-maintenance-schedules-and-reminders.md)
 
+## Control Files
+
+- [Heartbeat](./HEARTBEAT.md)
+- [PR Workflow](./PR_WORKFLOW.md)
+
 ## Suggested Working Pattern
 
 For each initiative:
