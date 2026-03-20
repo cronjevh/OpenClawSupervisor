@@ -9,7 +9,7 @@
 
 **Status:** 🟡 AMBER
 **As of:** 2026-03-20
-**Summary:** Risk register initialised. No compromise signals detected. Three medium risks require Cronje decision before mitigation can begin (SEC-001, SEC-002, SEC-003). No autonomous enhancements taken yet — HA access audit is the designated first action.
+**Summary:** Risk register initialised. No compromise signals detected yet. Three medium risks require Cronje decision before mitigation can begin (SEC-001, SEC-002, SEC-003). Lightweight POC heartbeat monitoring is now defined: repeated failed HA login/auth lines in `home-assistant.log` are the first concrete detection signal.
 
 ---
 
@@ -38,6 +38,7 @@ None.
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-03-20 | Risk register and heartbeat runbook created | Initialised — no prior baseline |
+| 2026-03-20 | Added failed-login POC heartbeat check | Defined lightweight read-only monitor against `/config/home-assistant.log` |
 
 ---
 

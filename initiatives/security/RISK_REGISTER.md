@@ -34,6 +34,7 @@ Signals checked automatically by the security heartbeat (see `HEARTBEAT.md` Phas
 
 | Signal | Maps to Risk | Detection Method |
 |--------|-------------|-----------------|
+| Repeated failed HA login / auth lines in `home-assistant.log` | SEC-002 | Read-only grep/search of `/config/home-assistant.log` for failed-auth patterns; POC incident threshold = 5 matches in recent inspection window |
 | Alarm entity state change without user action | SEC-001 | HA logbook query — `alarm_control_panel.*` state changes last 24h |
 | OpenClaw token accessed `alarm_control_panel.*` domain | SEC-001, SEC-002 | HA logbook — API calls from OpenClaw token to alarm entities |
 | HA token API activity with no active agent session | SEC-002 | HA logbook — activity timestamp vs known session windows |
@@ -47,3 +48,4 @@ Signals checked automatically by the security heartbeat (see `HEARTBEAT.md` Phas
 | Date | ID | Action | By |
 |------|----|---------|----|
 | 2026-03-20 | SEC-001 to SEC-006 | Initial register seeded from threat model discussion | Cronje + Supervisor |
+| 2026-03-20 | SEC-002 | Added lightweight POC compromise signal for repeated failed HA login/auth lines in `home-assistant.log` | Supervisor |
