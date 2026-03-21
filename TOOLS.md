@@ -85,3 +85,12 @@ Run in a login shell if commands are missing from PATH.
   - repo: `home-improvement`
 - Environment/token resolution for GitHub is provided by: `/home/cronjev/.openclaw/workspace/bin/openclaw_env.sh`
 - Keep supervisor as field medic by default; use this path when a case is complex enough to require durable issue tracking or guided escalation
+
+## Nightly Conversation Review Paths
+
+- Supervisor-side initiative: `/home/cronjev/.openclaw/workspace-supervisor/initiatives/conversation-review/`
+- Supervisor-side status pointer: `/home/cronjev/.openclaw/workspace-supervisor/initiatives/conversation-review/STATUS.md`
+- Downstream workflow spec: `/mnt/c/git/OpenClawHA/NIGHTLY_CONTEXT_REVIEW.md`
+- Nightly scaffold: `/mnt/c/git/OpenClawHA/bin/nightly_context_review.sh`
+- WhatsApp review collector: `/mnt/c/git/OpenClawHA/bin/review_whatsapp_sad_markers.py`
+- VACA voice review collector: `/mnt/c/git/OpenClawHA/bin/review_vaca_history.py`

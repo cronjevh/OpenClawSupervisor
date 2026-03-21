@@ -12,6 +12,7 @@ The aim is to keep a compact local control plane in the supervisor workspace:
 
 | Initiative | Directory | Status |
 |------------|-----------|--------|
+| [Conversation Review and Nightly Response Integrity](./conversation-review/conversation-review.md) | [conversation-review/](./conversation-review/) | Control-plane isolated; supervisor and OpenClawHA source map documented |
 | [OpenClaw + Home Assistant Security Hardening and Proactive Monitoring](./security/security-hardening-and-proactive-monitoring.md) | [security/](./security/) | Risk register seeded — HA access audit is next move |
 
 ## Backlog

@@ -17,6 +17,24 @@ A system that:
 
 Community groups contain useful local intelligence, but the signal-to-noise ratio is poor. The goal is to reduce attention cost without missing time-sensitive or important messages.
 
+## Changes Made (2026-03-21)
+
+### Root Causes Identified
+
+1. **BOOTSTRAP.md was being auto-injected into every group turn.** OpenClaw auto-discovers and injects all recognized bootstrap filenames (`BOOTSTRAP.md`, `SOUL.md`, `AGENTS.md`, etc.) from the workspace root. The bootstrap file said "Hey, I just came online. Who am I? Who are you?" — actively telling the model to be conversational. The file's own instructions said to delete it once setup is done; it hadn't been deleted.
+
+2. **SOUL.md constraint was too weak.** "Your default output is NO_REPLY" lets the model interpret "default" as "unless I decide this message warrants a helpful response." The instruction needed to be absolute, not a default.
+
+### Fixes Applied
+
+- Deleted `workspace-messaging/BOOTSTRAP.md`
+- Rewrote `workspace-messaging/SOUL.md` with an unambiguous output constraint: "Your response text to any monitored WhatsApp group turn is `NO_REPLY`. That is the only permitted output. Not a summary. Not an acknowledgement. **Any other text will be posted to the group.**"
+- Updated `workspace-messaging/AGENTS.md` to reinforce the absolute constraint
+
+### Technical Notes on NO_REPLY
+
+OpenClaw's `isSilentReplyText` uses regex `^\s*NO_REPLY\s*$` — the entire response text must be exactly "NO_REPLY" (optional whitespace). Any other text gets sent to the channel. The model must output this token and nothing else.
+
 ## Current Status (2026-03-21)
 
 ### What is now working
