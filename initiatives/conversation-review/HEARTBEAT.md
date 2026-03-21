@@ -25,6 +25,16 @@ Review these items:
    - still supports the WhatsApp bad-response lane
 6. `/mnt/c/git/OpenClawHA/bin/review_vaca_history.py`
    - still supports the VACA voice lane
+7. `/mnt/c/git/OpenClawHA/bin/review_simple_slow_requests.py`
+   - still supports the simple-but-slow latency lane
+8. `/mnt/c/git/OpenClawHA/bin/create_validation_case.py`
+   - still supports offline validation-case capture
+9. `/mnt/c/git/OpenClawHA/bin/run_validation_cases.py`
+   - still supports automated validation-case execution
+10. `/mnt/c/git/OpenClawHA/validation/README.md`
+   - still describes the safe rollout gate before primary exposure
+11. `/mnt/c/git/OpenClawHA/validation/cases/`
+   - still contains the executable case set being used for regression checks
 
 ## Integrity Questions
 
@@ -33,6 +43,9 @@ During heartbeat, check whether the workflow still:
 - prefers the smallest durable fix
 - protects user-facing replies from reasoning leakage and process pollution
 - keeps voice review focused on silence, brevity, and calm clarifications
+- flags simple requests that are still too slow for the tool path already available
+- keeps risky nightly-review fixes in candidate status until validation evidence exists
+- keeps the executable validation harness aligned with the documented safety rules
 - routes external dependency gaps into the established issue workflow instead of hiding them in local notes
 
 ## Output Shape

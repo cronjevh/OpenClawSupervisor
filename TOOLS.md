@@ -94,3 +94,8 @@ Run in a login shell if commands are missing from PATH.
 - Nightly scaffold: `/mnt/c/git/OpenClawHA/bin/nightly_context_review.sh`
 - WhatsApp review collector: `/mnt/c/git/OpenClawHA/bin/review_whatsapp_sad_markers.py`
 - VACA voice review collector: `/mnt/c/git/OpenClawHA/bin/review_vaca_history.py`
+- Slow simple request collector: `/mnt/c/git/OpenClawHA/bin/review_simple_slow_requests.py`
+- Validation case extractor: `/mnt/c/git/OpenClawHA/bin/create_validation_case.py`
+- Validation harness runner: `/mnt/c/git/OpenClawHA/bin/run_validation_cases.py`
+- Validation workflow notes: `/mnt/c/git/OpenClawHA/validation/README.md`
+- Executable validation cases: `/mnt/c/git/OpenClawHA/validation/cases/`

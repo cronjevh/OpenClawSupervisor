@@ -14,6 +14,7 @@ A single supervisor-side initiative that answers:
 - what counts as a response-integrity failure
 - where the executable workflow lives
 - how findings are meant to turn into durable improvements
+- how candidate changes are validated before they can affect the primary user
 
 ## What "Response Integrity" Means Here
 
@@ -24,6 +25,7 @@ Integrity checks focus on whether responses:
 - avoided reasoning leakage or workflow/admin language in user-facing replies
 - used the smallest useful clarification instead of drifting into procedural noise
 - stayed faithful to the actual interaction context instead of inventing or overextending
+- reached the right tool or answer path quickly enough for the simplicity of the request
 - produced the right kind of fix: memory, prompt, tooling, workflow, upstream issue, or no change
 
 ## Review Lanes
@@ -53,6 +55,27 @@ Collection rule:
 4. Identify the worst three interactions.
 5. Pull matching OpenClaw session evidence for diagnosis.
 
+### 3) Simple-but-slow lane
+
+Purpose:
+- catch short, straightforward requests that should have followed a direct path but instead burned time on avoidable reasoning or tool churn
+
+Collection rule:
+1. Review recent session logs for short, likely-simple requests.
+2. Measure the total turn latency from user message to final assistant reply.
+3. Flag candidates above the slow threshold.
+4. Break down where time was spent:
+   - before the first assistant action
+   - inside the tool call
+   - between tool result and final reply
+5. Treat the worst offenders as latency review cases.
+
+Typical examples:
+- volume up/down
+- pause or resume media
+- simple light or switch actions
+- short factual lookups that already have a direct path
+
 ## Expected Improvement Outputs
 
 Each reviewed failure should resolve to exactly one primary action:
@@ -62,6 +85,12 @@ Each reviewed failure should resolve to exactly one primary action:
 - runtime/tooling/workflow fix -> code/config/docs
 - external dependency gap -> issue via the established self-improvement path
 - no change
+
+Before any risky user-visible change is considered ready for primary use, it should also have a validation status:
+- candidate only
+- offline-reviewed
+- non-primary canary-reviewed
+- explicitly approved for primary rollout
 
 ## Source-of-Truth Map
 
@@ -74,6 +103,11 @@ This initiative is the supervisor-side control plane. The concrete nightly workf
 | Nightly review scaffold | `/mnt/c/git/OpenClawHA/bin/nightly_context_review.sh` |
 | WhatsApp marker review collector | `/mnt/c/git/OpenClawHA/bin/review_whatsapp_sad_markers.py` |
 | VACA history review collector | `/mnt/c/git/OpenClawHA/bin/review_vaca_history.py` |
+| Slow simple request collector | `/mnt/c/git/OpenClawHA/bin/review_simple_slow_requests.py` |
+| Validation case extractor | `/mnt/c/git/OpenClawHA/bin/create_validation_case.py` |
+| Validation harness runner | `/mnt/c/git/OpenClawHA/bin/run_validation_cases.py` |
+| Validation workflow notes | `/mnt/c/git/OpenClawHA/validation/README.md` |
+| Executable validation cases | `/mnt/c/git/OpenClawHA/validation/cases/` |
 | Daily run notes / evidence log | `/mnt/c/git/OpenClawHA/memory/YYYY-MM-DD-nightly-context-review.md` |
 
 ## Supervisor Responsibilities
@@ -82,6 +116,8 @@ This initiative is the supervisor-side control plane. The concrete nightly workf
 - ensure the nightly workflow still matches the intent described here
 - spot drift between supervisor docs and the `OpenClawHA` implementation
 - translate reviewed failures into the smallest durable improvement
+- prefer direct fast paths for simple requests when the needed tool or instruction already exists
+- keep primary-user rollout blocked until validation evidence exists for risky behavior changes
 - queue upstream or external fixes when the problem is not local to `OpenClawHA`
 
 ## Current Design Boundaries
@@ -91,6 +127,8 @@ This initiative is the supervisor-side control plane. The concrete nightly workf
 - Do not balloon memory files with speculative clutter.
 - Do not treat repo snapshots as live runtime truth unless the review explicitly needs an audit step.
 - Do not keep this methodology only in session memory again; update this initiative when the workflow changes materially.
+- Do not accept simple-request latency as "good enough" when a prompt or tool-path cleanup can remove the delay cheaply.
+- Do not use the primary user as the first validation surface for nightly-review behavior changes.
 
 ## Next Moves
 
