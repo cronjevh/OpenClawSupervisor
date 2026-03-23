@@ -16,6 +16,7 @@ Normal day-to-day conversation remains on WhatsApp with the `main` agent.
 
 - WhatsApp direct DM from `+27832639322` should land on `main`
 - Telegram direct DM from sender `8255517069` should land on `supervisor`
+- Admin-level control is allowed via the supervisor Discord channels that are explicitly bound/allowlisted in config.
 - `supervisor` should use `openrouter/openai/gpt-5.4` as primary model
 
 ## Repo and Runtime Map
