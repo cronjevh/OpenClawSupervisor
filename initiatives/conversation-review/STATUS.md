@@ -7,9 +7,9 @@
 
 ## Headline
 
-**Status:** 🟢 GREEN
-**As of:** 2026-03-21
-**Summary:** The nightly message-response integrity workflow is isolated as the `conversation-review` initiative in the supervisor workspace, now includes latency review for simple requests, and now explicitly blocks unvalidated primary-user rollout for risky behavior changes.
+**Status:** 🟡 MANUAL
+**As of:** 2026-03-24
+**Summary:** The nightly message-response integrity workflow is still documented here, but automated supervisor heartbeat review is now disabled for this initiative. Future review should be run manually because the unattended path was too token-expensive and did not deliver the intended outcome.
 
 ---
 
@@ -56,4 +56,4 @@
 
 ## Next Recommended Action
 
-Use this initiative as the supervisor-side home for any future changes to nightly review methodology, and treat `OpenClawHA/NIGHTLY_CONTEXT_REVIEW.md` as the downstream execution spec that must stay in sync.
+Use this initiative as the supervisor-side home for future methodology changes, but trigger review only on explicit request. Treat `OpenClawHA/NIGHTLY_CONTEXT_REVIEW.md` as the downstream execution spec that must stay in sync during manual review sessions.

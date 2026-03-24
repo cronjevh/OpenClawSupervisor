@@ -1,13 +1,18 @@
 # Conversation Review Heartbeat
 
+## Status
+
+Manual-only.
+
 ## Purpose
 
 Keep the supervisor-side description of nightly message-response integrity aligned with the real `OpenClawHA` workflow.
 
 ## Cadence
 
-- Weekly during initiative review
-- Immediately after any material change to the nightly review methodology or scripts in `OpenClawHA`
+- Do not run this as part of unattended supervisor heartbeat.
+- Run only when Cronje explicitly asks for a conversation-review check or wants to inspect drift in the downstream `OpenClawHA` workflow.
+- A manual review session may use a subscription-backed agent or IDE-driven review flow instead of the normal heartbeat path.
 
 ## Drift Checks
 
@@ -50,7 +55,7 @@ During heartbeat, check whether the workflow still:
 
 ## Output Shape
 
-If nothing meaningful changed, report `HEARTBEAT_OK`.
+If this file is reached during a generic automated heartbeat, stop and report `HEARTBEAT_OK` without performing the review.
 
 If drift or action is found, report only compact operational findings:
 - what changed
