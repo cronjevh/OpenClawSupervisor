@@ -1,137 +1,22 @@
-# Conversation Review and Nightly Response Integrity
+# Conversation Review
 
-## Purpose
+This location is now a legacy breadcrumb.
 
-Keep the nightly conversation-quality improvement loop easy to find, easy to reason about, and aligned with the downstream `OpenClawHA` workflow that actually stages the changes.
+The active execution surface for Conversation Review is the Mission Control board:
+- Board: `http://localhost:3000/boards/07b7a8fd-942a-4664-b5c8-a73310f1764c`
+- Board lead workspace: `/home/cronjev/.openclaw/workspace-lead-07b7a8fd-942a-4664-b5c8-a73310f1764c`
+- Review specialist workspace: `/home/cronjev/.openclaw/workspace-conv-review`
 
-This initiative exists because the process is working, but its specification had become scattered between supervisor memory notes and the implementation repo.
+Useful methodology from this former supervisor initiative has been migrated into the live specialist docs:
+- review lanes and evidence rules
+- response-integrity rubric
+- primary action taxonomy
+- validation status ladder
+- downstream `OpenClawHA` source map
 
-## Outcome Vision
+If you are trying to understand or change the current workflow:
+1. Start at the board URL above.
+2. Read the lead workspace `BOARD-CHARTER.md` and `DAILY-REVIEW-PROTOCOL.md`.
+3. Read the specialist workspace `REVIEW-PROTOCOL.md` and `MEMORY.md`.
 
-A single supervisor-side initiative that answers:
-- what the nightly review is for
-- which channels it reviews
-- what counts as a response-integrity failure
-- where the executable workflow lives
-- how findings are meant to turn into durable improvements
-- how candidate changes are validated before they can affect the primary user
-
-## What "Response Integrity" Means Here
-
-The nightly review is meant to protect and improve reply quality, especially on high-value channels.
-
-Integrity checks focus on whether responses:
-- stayed aligned with the intended tone and brevity
-- avoided reasoning leakage or workflow/admin language in user-facing replies
-- used the smallest useful clarification instead of drifting into procedural noise
-- stayed faithful to the actual interaction context instead of inventing or overextending
-- reached the right tool or answer path quickly enough for the simplicity of the request
-- produced the right kind of fix: memory, prompt, tooling, workflow, upstream issue, or no change
-
-## Review Lanes
-
-### 1) WhatsApp bad-response lane
-
-Trigger:
-- user replies to a bad main-agent answer with `😢` or `👎`
-
-Collection rule:
-1. Find the marked reply in the main session log.
-2. Walk back the parent chain.
-3. Always include at least the first two parents.
-4. Keep walking back while the time gap to the prior turn is 10 minutes or less.
-5. Treat the resulting slice as one bad-interaction cluster.
-
-### 2) VACA voice lane
-
-Source signals:
-- `sensor.vaca_215d3e5be_stt`
-- `sensor.vaca_215d3e5be_tts`
-
-Collection rule:
-1. Pull yesterday's history for both sensors.
-2. Merge entries chronologically.
-3. Group nearby STT/TTS entries into candidate interactions.
-4. Identify the worst three interactions.
-5. Pull matching OpenClaw session evidence for diagnosis.
-
-### 3) Simple-but-slow lane
-
-Purpose:
-- catch short, straightforward requests that should have followed a direct path but instead burned time on avoidable reasoning or tool churn
-
-Collection rule:
-1. Review recent session logs for short, likely-simple requests.
-2. Measure the total turn latency from user message to final assistant reply.
-3. Flag candidates above the slow threshold.
-4. Break down where time was spent:
-   - before the first assistant action
-   - inside the tool call
-   - between tool result and final reply
-5. Treat the worst offenders as latency review cases.
-
-Typical examples:
-- volume up/down
-- pause or resume media
-- simple light or switch actions
-- short factual lookups that already have a direct path
-
-## Expected Improvement Outputs
-
-Each reviewed failure should resolve to exactly one primary action:
-- durable fact -> `MEMORY.md`
-- short-lived context -> `memory/YYYY-MM-DD.md`
-- behavior/policy fix -> prompt/workspace files
-- runtime/tooling/workflow fix -> code/config/docs
-- external dependency gap -> issue via the established self-improvement path
-- no change
-
-Before any risky user-visible change is considered ready for primary use, it should also have a validation status:
-- candidate only
-- offline-reviewed
-- non-primary canary-reviewed
-- explicitly approved for primary rollout
-
-## Source-of-Truth Map
-
-This initiative is the supervisor-side control plane. The concrete nightly workflow lives in `OpenClawHA`.
-
-| Concern | Source |
-|--------|--------|
-| Supervisor-side initiative and discoverability | `initiatives/conversation-review/` |
-| Downstream methodology spec | `/mnt/c/git/OpenClawHA/NIGHTLY_CONTEXT_REVIEW.md` |
-| Nightly review scaffold | `/mnt/c/git/OpenClawHA/bin/nightly_context_review.sh` |
-| WhatsApp marker review collector | `/mnt/c/git/OpenClawHA/bin/review_whatsapp_sad_markers.py` |
-| VACA history review collector | `/mnt/c/git/OpenClawHA/bin/review_vaca_history.py` |
-| Slow simple request collector | `/mnt/c/git/OpenClawHA/bin/review_simple_slow_requests.py` |
-| Validation case extractor | `/mnt/c/git/OpenClawHA/bin/create_validation_case.py` |
-| Validation harness runner | `/mnt/c/git/OpenClawHA/bin/run_validation_cases.py` |
-| Validation workflow notes | `/mnt/c/git/OpenClawHA/validation/README.md` |
-| Executable validation cases | `/mnt/c/git/OpenClawHA/validation/cases/` |
-| Daily run notes / evidence log | `/mnt/c/git/OpenClawHA/memory/YYYY-MM-DD-nightly-context-review.md` |
-
-## Supervisor Responsibilities
-
-- keep the control-plane description easy to locate in this workspace
-- ensure the nightly workflow still matches the intent described here
-- spot drift between supervisor docs and the `OpenClawHA` implementation
-- translate reviewed failures into the smallest durable improvement
-- prefer direct fast paths for simple requests when the needed tool or instruction already exists
-- keep primary-user rollout blocked until validation evidence exists for risky behavior changes
-- queue upstream or external fixes when the problem is not local to `OpenClawHA`
-
-## Current Design Boundaries
-
-- Do not send overnight user messages as part of review.
-- Do not create a fresh PR every night.
-- Do not balloon memory files with speculative clutter.
-- Do not treat repo snapshots as live runtime truth unless the review explicitly needs an audit step.
-- Do not keep this methodology only in session memory again; update this initiative when the workflow changes materially.
-- Do not accept simple-request latency as "good enough" when a prompt or tool-path cleanup can remove the delay cheaply.
-- Do not use the primary user as the first validation surface for nightly-review behavior changes.
-
-## Next Moves
-
-- Keep `STATUS.md` current as the quick answer to "where does this live now?"
-- Use `HEARTBEAT.md` to check for drift when the downstream workflow changes.
-- If the review lanes or decision rubric change in `OpenClawHA`, mirror the change back into this initiative promptly.
+Do not revive this supervisor initiative as an active control plane. Update the board or specialist workspaces instead.
